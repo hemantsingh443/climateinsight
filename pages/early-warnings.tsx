@@ -1,8 +1,8 @@
 
-// pages/early-warnings.tsx
 import Head from 'next/head';
 import { useState } from 'react';
 import { AlertTriangle, ThermometerSun, Droplets, Wind, MapPin } from 'lucide-react';
+import Link from 'next/link'; // Import Link for navigation
 
 // Define warning levels with associated CSS classes
 const warningLevels = {
@@ -43,7 +43,12 @@ export default function EarlyWarnings() {
       </Head>
 
       <main className="container mx-auto px-4 py-8">
-        <h1 className="text-3xl font-bold mb-8">Early Warnings</h1>
+        {/* Button to navigate back to the homepage */}
+        <Link href="/" className="mb-4 inline-block px-4 py-2 bg-blue-500 text-white rounded hover:bg-blue-600">
+          Back to Homepage
+        </Link>
+
+        <h1 className="text-3xl font-bold mb-8 text-black">Early Warnings</h1>
 
         <div className="grid grid-cols-1 md:grid-cols-3 gap-8 mb-8">
           <div className="md:col-span-2 bg-white p-6 rounded-lg shadow-lg">

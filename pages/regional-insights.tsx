@@ -3,6 +3,7 @@ import Head from 'next/head';
 import { useState } from 'react';
 import { LineChart, Line, XAxis, YAxis, CartesianGrid, Tooltip, Legend, ResponsiveContainer } from 'recharts';
 import { MapPin, AlertTriangle, Droplet, Thermometer } from 'lucide-react';
+import Link from 'next/link'; // Import Link for navigation
 
 // Define the type for the regional data
 interface ClimateData {
@@ -152,6 +153,15 @@ export default function RegionalInsights() {
             <li>Enhance coastal defenses to mitigate the impact of rising sea levels</li>
             <li>Improve urban planning to reduce heat island effects in cities</li>
           </ul>
+        </div>
+
+        {/* Back to Homepage Button */}
+        <div className="mt-8 text-center">
+          <Link href="/" passHref>
+            <button className="px-4 py-2 rounded bg-blue-500 text-white hover:bg-blue-600 transition">
+              Back to Homepage
+            </button>
+          </Link>
         </div>
       </main>
     </div>

@@ -1,9 +1,9 @@
 
-// pages/data-analysis.tsx
 import Head from 'next/head';
 import { useState } from 'react';
 import { BarChart, Bar, XAxis, YAxis, CartesianGrid, Tooltip, Legend, ResponsiveContainer } from 'recharts';
 import { Sliders, Download } from 'lucide-react';
+import Link from 'next/link'; // Import Link for navigation
 
 const data = [
   { year: 2010, temperature: 14.5, co2: 389, seaLevel: 0 },
@@ -30,6 +30,11 @@ export default function DataAnalysis() {
 
       <main className="container mx-auto px-4 py-8">
         <h1 className="text-3xl font-bold mb-8 text-black">Data Analysis</h1>
+
+        {/* Button to navigate back to the homepage */}
+        <Link href="/" className="mb-4 inline-block px-4 py-2 bg-blue-500 text-white rounded hover:bg-blue-600">
+          Back to Homepage
+        </Link>
 
         <div className="bg-white p-6 rounded-lg shadow-lg mb-8">
           <div className="flex justify-between items-center mb-4">
