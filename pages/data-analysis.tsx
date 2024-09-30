@@ -15,7 +15,6 @@ const data = [
 export default function DataAnalysis() {
   const [selectedMetrics, setSelectedMetrics] = useState<string[]>(['temperature', 'co2', 'seaLevel']);
 
-  // Specify the type for the parameter metric
   const toggleMetric = (metric: 'temperature' | 'co2' | 'seaLevel') => {
     setSelectedMetrics(prev => 
       prev.includes(metric) ? prev.filter(m => m !== metric) : [...prev, metric]
@@ -30,11 +29,11 @@ export default function DataAnalysis() {
       </Head>
 
       <main className="container mx-auto px-4 py-8">
-        <h1 className="text-3xl font-bold mb-8">Data Analysis</h1>
+        <h1 className="text-3xl font-bold mb-8 text-black">Data Analysis</h1>
 
         <div className="bg-white p-6 rounded-lg shadow-lg mb-8">
           <div className="flex justify-between items-center mb-4">
-            <h2 className="text-xl font-semibold">Climate Trends</h2>
+            <h2 className="text-xl font-semibold text-black">Climate Trends</h2>
             <div className="flex space-x-2">
               <button className="p-2 bg-blue-500 text-white rounded hover:bg-blue-600">
                 <Sliders size={20} />
@@ -58,8 +57,8 @@ export default function DataAnalysis() {
           </ResponsiveContainer>
         </div>
 
-        <div className="bg-white p-6 rounded-lg shadow-lg mb-8">
-          <h2 className="text-xl font-semibold mb-4">Metric Selection</h2>
+        <div className="bg-gray-200 p-6 rounded-lg shadow-lg mb-8">
+          <h2 className="text-xl font-semibold mb-4 text-black">Metric Selection</h2>
           <div className="flex flex-wrap gap-4">
             {['temperature', 'co2', 'seaLevel'].map(metric => (
               <button
@@ -75,9 +74,9 @@ export default function DataAnalysis() {
           </div>
         </div>
 
-        <div className="bg-white p-6 rounded-lg shadow-lg">
-          <h2 className="text-xl font-semibold mb-4">AI-Powered Insights</h2>
-          <ul className="list-disc pl-5 space-y-2">
+        <div className="bg-gray-200 p-6 rounded-lg shadow-lg">
+          <h2 className="text-xl font-semibold mb-4 text-black">AI-Powered Insights</h2>
+          <ul className="list-disc pl-5 space-y-2 text-black">
             <li>Temperature is rising at an average rate of 0.3°C per decade.</li>
             <li>CO2 levels show a strong correlation with temperature increase (r = 0.95).</li>
             <li>Sea level rise is accelerating, with the rate doubling every 20 years.</li>

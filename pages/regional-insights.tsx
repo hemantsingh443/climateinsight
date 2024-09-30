@@ -77,14 +77,14 @@ export default function RegionalInsights() {
       </Head>
 
       <main className="container mx-auto px-4 py-8">
-        <h1 className="text-3xl font-bold mb-8">Regional Insights</h1>
+        <h1 className="text-3xl font-bold mb-8 text-black">Regional Insights</h1>
 
         <div className="grid grid-cols-1 md:grid-cols-4 gap-8 mb-8">
           <div className="md:col-span-1 bg-white p-6 rounded-lg shadow-lg">
-            <h2 className="text-xl font-semibold mb-4">Select Region</h2>
+            <h2 className="text-xl font-semibold mb-4 text-black">Select Region</h2>
             <ul className="space-y-2">
               {regions.map(region => (
-                <li key={region.id}>
+                <li key={region.id} className="text-black">
                   <button
                     onClick={() => setSelectedRegion(region.name as 'North America' | 'Europe' | 'Asia' | 'Africa' | 'South America' | 'Oceania')}
                     className={`w-full text-left px-4 py-2 rounded ${
@@ -100,7 +100,7 @@ export default function RegionalInsights() {
           </div>
 
           <div className="md:col-span-3 bg-white p-6 rounded-lg shadow-lg">
-            <h2 className="text-xl font-semibold mb-4">{selectedRegion} Climate Projections</h2>
+            <h2 className="text-xl font-semibold mb-4 text-black">{selectedRegion} Climate Projections</h2>
             <ResponsiveContainer width="100%" height={300}>
               <LineChart data={regionalData[selectedRegion]}>
                 <CartesianGrid strokeDasharray="3 3" />
@@ -118,35 +118,35 @@ export default function RegionalInsights() {
 
         <div className="grid grid-cols-1 md:grid-cols-3 gap-8 mb-8">
           <div className="bg-white p-6 rounded-lg shadow-lg">
-            <h3 className="text-lg font-semibold mb-2 flex items-center">
+            <h3 className="text-lg font-semibold mb-2 flex items-center text-black">
               <AlertTriangle className="mr-2" size={20} />
               Key Risks
             </h3>
-            <ul className="list-disc pl-5 space-y-2">
+            <ul className="list-disc pl-5 space-y-2 text-black">
               <li>Increased frequency of heatwaves</li>
               <li>Rising sea levels affecting coastal areas</li>
               <li>More intense and frequent hurricanes</li>
             </ul>
           </div>
           <div className="bg-white p-6 rounded-lg shadow-lg">
-            <h3 className="text-lg font-semibold mb-2 flex items-center">
+            <h3 className="text-lg font-semibold mb-2 flex items-center text-black">
               <Thermometer className="mr-2" size={20} />
               Temperature Impact
             </h3>
-            <p>Average temperature is projected to increase by 2.7°C by 2050, leading to significant changes in local ecosystems and agriculture.</p>
+            <p className="text-black">Average temperature is projected to increase by 2.7°C by 2050, leading to significant changes in local ecosystems and agriculture.</p>
           </div>
           <div className="bg-white p-6 rounded-lg shadow-lg">
-            <h3 className="text-lg font-semibold mb-2 flex items-center">
+            <h3 className="text-lg font-semibold mb-2 flex items-center text-black">
               <Droplet className="mr-2" size={20} />
               Precipitation Changes
             </h3>
-            <p>Annual precipitation is expected to decrease by 6% by 2050, potentially leading to water scarcity issues in some areas.</p>
+            <p className="text-black">Annual precipitation is expected to decrease by 6% by 2050, potentially leading to water scarcity issues in some areas.</p>
           </div>
         </div>
 
         <div className="bg-white p-6 rounded-lg shadow-lg">
-          <h2 className="text-xl font-semibold mb-4">Adaptation Strategies</h2>
-          <ul className="list-disc pl-5 space-y-2">
+          <h2 className="text-xl font-semibold mb-4 text-black">Adaptation Strategies</h2>
+          <ul className="list-disc pl-5 space-y-2 text-black">
             <li>Implement water conservation measures and improve irrigation efficiency</li>
             <li>Develop heat-resistant crop varieties to maintain agricultural productivity</li>
             <li>Enhance coastal defenses to mitigate the impact of rising sea levels</li>
