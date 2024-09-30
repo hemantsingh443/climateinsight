@@ -2,7 +2,7 @@
 import Head from 'next/head';
 import { useState } from 'react';
 import { LineChart, Line, XAxis, YAxis, CartesianGrid, Tooltip, Legend, ResponsiveContainer } from 'recharts';
-import { MapPin, AlertTriangle, Droplet, Thermometer } from 'lucide-react';
+import { MapPin, AlertTriangle, Droplet, Thermometer, Sun, Moon } from 'lucide-react';
 import Link from 'next/link'; // Import Link for navigation
 
 // Define the type for the regional data
@@ -69,23 +69,32 @@ const regionalData: RegionalData = {
 
 export default function RegionalInsights() {
   const [selectedRegion, setSelectedRegion] = useState<'North America' | 'Europe' | 'Asia' | 'Africa' | 'South America' | 'Oceania'>('North America');
+  const [darkMode, setDarkMode] = useState(false); // Local darkMode state
 
   return (
-    <div className="min-h-screen bg-gray-100">
+    <div className={`${darkMode ? 'bg-gray-900 text-white' : 'bg-gray-100 text-black'} min-h-screen`}>
       <Head>
         <title>Regional Insights - ClimateInsight</title>
         <link rel="icon" href="/favicon.ico" />
       </Head>
 
       <main className="container mx-auto px-4 py-8">
-        <h1 className="text-3xl font-bold mb-8 text-black">Regional Insights</h1>
+        <h1 className="text-3xl font-bold mb-8">Regional Insights</h1>
+
+        {/* Dark mode toggle button */}
+        <button
+          onClick={() => setDarkMode(!darkMode)}
+          className={`mb-4 p-2 rounded-full ${darkMode ? 'bg-yellow-400 text-gray-900' : 'bg-gray-200 text-gray-600'}`}
+        >
+          {darkMode ? <Sun size={20} /> : <Moon size={20} />}
+        </button>
 
         <div className="grid grid-cols-1 md:grid-cols-4 gap-8 mb-8">
-          <div className="md:col-span-1 bg-white p-6 rounded-lg shadow-lg">
-            <h2 className="text-xl font-semibold mb-4 text-black">Select Region</h2>
+          <div className={`md:col-span-1 ${darkMode ? 'bg-gray-800' : 'bg-white'} p-6 rounded-lg shadow-lg`}>
+            <h2 className="text-xl font-semibold mb-4">Select Region</h2>
             <ul className="space-y-2">
               {regions.map(region => (
-                <li key={region.id} className="text-black">
+                <li key={region.id}>
                   <button
                     onClick={() => setSelectedRegion(region.name as 'North America' | 'Europe' | 'Asia' | 'Africa' | 'South America' | 'Oceania')}
                     className={`w-full text-left px-4 py-2 rounded ${
@@ -100,8 +109,8 @@ export default function RegionalInsights() {
             </ul>
           </div>
 
-          <div className="md:col-span-3 bg-white p-6 rounded-lg shadow-lg">
-            <h2 className="text-xl font-semibold mb-4 text-black">{selectedRegion} Climate Projections</h2>
+          <div className={`md:col-span-3 ${darkMode ? 'bg-gray-800' : 'bg-white'} p-6 rounded-lg shadow-lg`}>
+            <h2 className="text-xl font-semibold mb-4">{selectedRegion} Climate Projections</h2>
             <ResponsiveContainer width="100%" height={300}>
               <LineChart data={regionalData[selectedRegion]}>
                 <CartesianGrid strokeDasharray="3 3" />
@@ -118,36 +127,36 @@ export default function RegionalInsights() {
         </div>
 
         <div className="grid grid-cols-1 md:grid-cols-3 gap-8 mb-8">
-          <div className="bg-white p-6 rounded-lg shadow-lg">
-            <h3 className="text-lg font-semibold mb-2 flex items-center text-black">
+          <div className={`p-6 rounded-lg shadow-lg ${darkMode ? 'bg-gray-800' : 'bg-white'}`}>
+            <h3 className="text-lg font-semibold mb-2 flex items-center">
               <AlertTriangle className="mr-2" size={20} />
               Key Risks
             </h3>
-            <ul className="list-disc pl-5 space-y-2 text-black">
+            <ul className="list-disc pl-5 space-y-2">
               <li>Increased frequency of heatwaves</li>
               <li>Rising sea levels affecting coastal areas</li>
               <li>More intense and frequent hurricanes</li>
             </ul>
           </div>
-          <div className="bg-white p-6 rounded-lg shadow-lg">
-            <h3 className="text-lg font-semibold mb-2 flex items-center text-black">
+          <div className={`p-6 rounded-lg shadow-lg ${darkMode ? 'bg-gray-800' : 'bg-white'}`}>
+            <h3 className="text-lg font-semibold mb-2 flex items-center">
               <Thermometer className="mr-2" size={20} />
               Temperature Impact
             </h3>
-            <p className="text-black">Average temperature is projected to increase by 2.7°C by 2050, leading to significant changes in local ecosystems and agriculture.</p>
+            <p>Average temperature is projected to increase by 2.7°C by 2050, leading to significant changes in local ecosystems and agriculture.</p>
           </div>
-          <div className="bg-white p-6 rounded-lg shadow-lg">
-            <h3 className="text-lg font-semibold mb-2 flex items-center text-black">
+          <div className={`p-6 rounded-lg shadow-lg ${darkMode ? 'bg-gray-800' : 'bg-white'}`}>
+            <h3 className="text-lg font-semibold mb-2 flex items-center">
               <Droplet className="mr-2" size={20} />
               Precipitation Changes
             </h3>
-            <p className="text-black">Annual precipitation is expected to decrease by 6% by 2050, potentially leading to water scarcity issues in some areas.</p>
+            <p>Annual precipitation is expected to decrease by 6% by 2050, potentially leading to water scarcity issues in some areas.</p>
           </div>
         </div>
 
-        <div className="bg-white p-6 rounded-lg shadow-lg">
-          <h2 className="text-xl font-semibold mb-4 text-black">Adaptation Strategies</h2>
-          <ul className="list-disc pl-5 space-y-2 text-black">
+        <div className={`p-6 rounded-lg shadow-lg ${darkMode ? 'bg-gray-800' : 'bg-white'}`}>
+          <h2 className="text-xl font-semibold mb-4">Adaptation Strategies</h2>
+          <ul className="list-disc pl-5 space-y-2">
             <li>Implement water conservation measures and improve irrigation efficiency</li>
             <li>Develop heat-resistant crop varieties to maintain agricultural productivity</li>
             <li>Enhance coastal defenses to mitigate the impact of rising sea levels</li>

@@ -2,7 +2,7 @@
 import Head from 'next/head';
 import { useState } from 'react';
 import { BarChart, Bar, XAxis, YAxis, CartesianGrid, Tooltip, Legend, ResponsiveContainer } from 'recharts';
-import { Sliders, Download } from 'lucide-react';
+import { Sliders, Download, Sun, Moon } from 'lucide-react'; // Import Sun and Moon icons
 import Link from 'next/link'; // Import Link for navigation
 
 const data = [
@@ -14,6 +14,7 @@ const data = [
 
 export default function DataAnalysis() {
   const [selectedMetrics, setSelectedMetrics] = useState<string[]>(['temperature', 'co2', 'seaLevel']);
+  const [darkMode, setDarkMode] = useState(false); // Local darkMode state
 
   const toggleMetric = (metric: 'temperature' | 'co2' | 'seaLevel') => {
     setSelectedMetrics(prev => 
@@ -22,23 +23,33 @@ export default function DataAnalysis() {
   };
 
   return (
-    <div className="min-h-screen bg-gray-100">
+    <div className={`min-h-screen ${darkMode ? 'bg-gray-900 text-white' : 'bg-gray-100 text-black'}`}>
       <Head>
         <title>Data Analysis - ClimateInsight</title>
         <link rel="icon" href="/favicon.ico" />
       </Head>
 
       <main className="container mx-auto px-4 py-8">
-        <h1 className="text-3xl font-bold mb-8 text-black">Data Analysis</h1>
+        <div className="flex justify-between items-center mb-4">
+          <h1 className="text-3xl font-bold">Data Analysis</h1>
+
+          {/* Dark mode toggle button */}
+          <button
+            onClick={() => setDarkMode(!darkMode)}
+            className={`p-2 rounded-full ${darkMode ? 'bg-yellow-400 text-gray-900' : 'bg-gray-200 text-gray-600'}`}
+          >
+            {darkMode ? <Sun size={20} /> : <Moon size={20} />}
+          </button>
+        </div>
 
         {/* Button to navigate back to the homepage */}
         <Link href="/" className="mb-4 inline-block px-4 py-2 bg-blue-500 text-white rounded hover:bg-blue-600">
           Back to Homepage
         </Link>
 
-        <div className="bg-white p-6 rounded-lg shadow-lg mb-8">
+        <div className={`${darkMode ? 'bg-gray-800' : 'bg-white'} p-6 rounded-lg shadow-lg mb-8`}>
           <div className="flex justify-between items-center mb-4">
-            <h2 className="text-xl font-semibold text-black">Climate Trends</h2>
+            <h2 className="text-xl font-semibold">Climate Trends</h2>
             <div className="flex space-x-2">
               <button className="p-2 bg-blue-500 text-white rounded hover:bg-blue-600">
                 <Sliders size={20} />
@@ -62,15 +73,15 @@ export default function DataAnalysis() {
           </ResponsiveContainer>
         </div>
 
-        <div className="bg-gray-200 p-6 rounded-lg shadow-lg mb-8">
-          <h2 className="text-xl font-semibold mb-4 text-black">Metric Selection</h2>
+        <div className={`${darkMode ? 'bg-gray-800' : 'bg-gray-200'} p-6 rounded-lg shadow-lg mb-8`}>
+          <h2 className="text-xl font-semibold mb-4">Metric Selection</h2>
           <div className="flex flex-wrap gap-4">
             {['temperature', 'co2', 'seaLevel'].map(metric => (
               <button
                 key={metric}
                 onClick={() => toggleMetric(metric as 'temperature' | 'co2' | 'seaLevel')}
                 className={`px-4 py-2 rounded ${
-                  selectedMetrics.includes(metric) ? 'bg-blue-500 text-white' : 'bg-gray-200 text-gray-700'
+                  selectedMetrics.includes(metric) ? 'bg-blue-500 text-white' : darkMode ? 'bg-gray-700 text-gray-300' : 'bg-gray-200 text-gray-700'
                 }`}
               >
                 {metric.charAt(0).toUpperCase() + metric.slice(1)}
@@ -79,9 +90,9 @@ export default function DataAnalysis() {
           </div>
         </div>
 
-        <div className="bg-gray-200 p-6 rounded-lg shadow-lg">
-          <h2 className="text-xl font-semibold mb-4 text-black">AI-Powered Insights</h2>
-          <ul className="list-disc pl-5 space-y-2 text-black">
+        <div className={`${darkMode ? 'bg-gray-800' : 'bg-gray-200'} p-6 rounded-lg shadow-lg`}>
+          <h2 className="text-xl font-semibold mb-4">AI-Powered Insights</h2>
+          <ul className={`list-disc pl-5 space-y-2 ${darkMode ? 'text-gray-300' : 'text-black'}`}>
             <li>Temperature is rising at an average rate of 0.3°C per decade.</li>
             <li>CO2 levels show a strong correlation with temperature increase (r = 0.95).</li>
             <li>Sea level rise is accelerating, with the rate doubling every 20 years.</li>
@@ -92,4 +103,5 @@ export default function DataAnalysis() {
     </div>
   );
 }
+
 
