@@ -1,8 +1,13 @@
-// components/ClimateMap.js
+
+// components/ClimateMap.tsx
 import { useState } from 'react';
 
-export default function ClimateMap({ darkMode }) {
-  const [selectedRegion, setSelectedRegion] = useState(null);
+interface ClimateMapProps {
+  darkMode: boolean; // Specify the type for darkMode
+}
+
+export default function ClimateMap({ darkMode }: ClimateMapProps) {
+  const [selectedRegion, setSelectedRegion] = useState<null | { id: number; name: string; temperature: number; co2: number }>(null);
 
   const regions = [
     { id: 1, name: 'North America', temperature: 15.2, co2: 410 },
@@ -35,3 +40,4 @@ export default function ClimateMap({ darkMode }) {
     </div>
   );
 }
+

@@ -1,16 +1,31 @@
-// pages/early-warnings.js
+
+// pages/early-warnings.tsx
 import Head from 'next/head';
 import { useState } from 'react';
 import { AlertTriangle, ThermometerSun, Droplets, Wind, MapPin } from 'lucide-react';
 
+// Define warning levels with associated CSS classes
 const warningLevels = {
   low: 'bg-green-100 text-green-800',
   moderate: 'bg-yellow-100 text-yellow-800',
   high: 'bg-orange-100 text-orange-800',
   severe: 'bg-red-100 text-red-800',
-};
+} as const; // Use 'as const' to infer literal types
 
-const warnings = [
+// Define a type for the warning levels
+type WarningLevel = keyof typeof warningLevels;
+
+// Define a type for a warning object
+interface Warning {
+  id: number;
+  type: string;
+  level: WarningLevel;
+  region: string;
+  description: string;
+}
+
+// Sample warnings data
+const warnings: Warning[] = [
   { id: 1, type: 'Heatwave', level: 'high', region: 'Southwest', description: 'Temperatures expected to exceed 40°C for the next 5 days.' },
   { id: 2, type: 'Drought', level: 'moderate', region: 'Midwest', description: 'Rainfall 50% below average for the past 3 months.' },
   { id: 3, type: 'Severe Storm', level: 'severe', region: 'Southeast', description: 'Category 4 hurricane approaching the coast.' },
@@ -18,7 +33,7 @@ const warnings = [
 ];
 
 export default function EarlyWarnings() {
-  const [selectedWarning, setSelectedWarning] = useState(null);
+  const [selectedWarning, setSelectedWarning] = useState<number | null>(null);
 
   return (
     <div className="min-h-screen bg-gray-100">
@@ -141,3 +156,4 @@ export default function EarlyWarnings() {
     </div>
   );
 }
+

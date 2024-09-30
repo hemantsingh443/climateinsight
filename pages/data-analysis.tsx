@@ -1,4 +1,5 @@
-// pages/data-analysis.js
+
+// pages/data-analysis.tsx
 import Head from 'next/head';
 import { useState } from 'react';
 import { BarChart, Bar, XAxis, YAxis, CartesianGrid, Tooltip, Legend, ResponsiveContainer } from 'recharts';
@@ -12,9 +13,10 @@ const data = [
 ];
 
 export default function DataAnalysis() {
-  const [selectedMetrics, setSelectedMetrics] = useState(['temperature', 'co2', 'seaLevel']);
+  const [selectedMetrics, setSelectedMetrics] = useState<string[]>(['temperature', 'co2', 'seaLevel']);
 
-  const toggleMetric = (metric) => {
+  // Specify the type for the parameter metric
+  const toggleMetric = (metric: 'temperature' | 'co2' | 'seaLevel') => {
     setSelectedMetrics(prev => 
       prev.includes(metric) ? prev.filter(m => m !== metric) : [...prev, metric]
     );
@@ -62,7 +64,7 @@ export default function DataAnalysis() {
             {['temperature', 'co2', 'seaLevel'].map(metric => (
               <button
                 key={metric}
-                onClick={() => toggleMetric(metric)}
+                onClick={() => toggleMetric(metric as 'temperature' | 'co2' | 'seaLevel')}
                 className={`px-4 py-2 rounded ${
                   selectedMetrics.includes(metric) ? 'bg-blue-500 text-white' : 'bg-gray-200 text-gray-700'
                 }`}
@@ -86,3 +88,4 @@ export default function DataAnalysis() {
     </div>
   );
 }
+

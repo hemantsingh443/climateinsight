@@ -1,5 +1,10 @@
-// components/NewsSection.js
-export default function NewsSection({ darkMode }) {
+
+// components/NewsSection.tsx
+interface NewsSectionProps {
+  darkMode: boolean; // Indicates if dark mode is enabled
+}
+
+export default function NewsSection({ darkMode }: NewsSectionProps) {
   const news = [
     { id: 1, title: 'Global CO2 Levels Reach New High', date: '2024-05-15' },
     { id: 2, title: 'Arctic Sea Ice at Record Low', date: '2024-05-10' },
@@ -20,3 +25,4 @@ export default function NewsSection({ darkMode }) {
     </section>
   );
 }
+

@@ -1,9 +1,22 @@
-// pages/regional-insights.js
+
 import Head from 'next/head';
 import { useState } from 'react';
 import { LineChart, Line, XAxis, YAxis, CartesianGrid, Tooltip, Legend, ResponsiveContainer } from 'recharts';
 import { MapPin, AlertTriangle, Droplet, Thermometer } from 'lucide-react';
 
+// Define the type for the regional data
+interface ClimateData {
+  year: number;
+  temperature: number;
+  precipitation: number;
+}
+
+// Define the type for regional data mapping
+interface RegionalData {
+  [region: string]: ClimateData[];
+}
+
+// Define regions
 const regions = [
   { id: 1, name: 'North America' },
   { id: 2, name: 'Europe' },
@@ -13,18 +26,48 @@ const regions = [
   { id: 6, name: 'Oceania' },
 ];
 
-const regionalData = {
+// Define the regional data with proper typing
+const regionalData: RegionalData = {
   'North America': [
     { year: 2020, temperature: 15.2, precipitation: 1000 },
     { year: 2030, temperature: 16.1, precipitation: 980 },
     { year: 2040, temperature: 17.0, precipitation: 960 },
     { year: 2050, temperature: 17.9, precipitation: 940 },
   ],
-  // ... (similar data for other regions)
+  'Europe': [
+    { year: 2020, temperature: 14.8, precipitation: 850 },
+    { year: 2030, temperature: 15.5, precipitation: 830 },
+    { year: 2040, temperature: 16.2, precipitation: 810 },
+    { year: 2050, temperature: 16.9, precipitation: 790 },
+  ],
+  'Asia': [
+    { year: 2020, temperature: 16.5, precipitation: 1200 },
+    { year: 2030, temperature: 17.3, precipitation: 1150 },
+    { year: 2040, temperature: 18.1, precipitation: 1100 },
+    { year: 2050, temperature: 18.9, precipitation: 1050 },
+  ],
+  'Africa': [
+    { year: 2020, temperature: 21.1, precipitation: 600 },
+    { year: 2030, temperature: 21.8, precipitation: 580 },
+    { year: 2040, temperature: 22.5, precipitation: 560 },
+    { year: 2050, temperature: 23.2, precipitation: 540 },
+  ],
+  'South America': [
+    { year: 2020, temperature: 20.3, precipitation: 1200 },
+    { year: 2030, temperature: 21.0, precipitation: 1150 },
+    { year: 2040, temperature: 21.7, precipitation: 1100 },
+    { year: 2050, temperature: 22.4, precipitation: 1050 },
+  ],
+  'Oceania': [
+    { year: 2020, temperature: 18.7, precipitation: 950 },
+    { year: 2030, temperature: 19.4, precipitation: 930 },
+    { year: 2040, temperature: 20.1, precipitation: 910 },
+    { year: 2050, temperature: 20.8, precipitation: 890 },
+  ],
 };
 
 export default function RegionalInsights() {
-  const [selectedRegion, setSelectedRegion] = useState('North America');
+  const [selectedRegion, setSelectedRegion] = useState<'North America' | 'Europe' | 'Asia' | 'Africa' | 'South America' | 'Oceania'>('North America');
 
   return (
     <div className="min-h-screen bg-gray-100">
@@ -43,7 +86,7 @@ export default function RegionalInsights() {
               {regions.map(region => (
                 <li key={region.id}>
                   <button
-                    onClick={() => setSelectedRegion(region.name)}
+                    onClick={() => setSelectedRegion(region.name as 'North America' | 'Europe' | 'Asia' | 'Africa' | 'South America' | 'Oceania')}
                     className={`w-full text-left px-4 py-2 rounded ${
                       selectedRegion === region.name ? 'bg-blue-500 text-white' : 'hover:bg-gray-100'
                     }`}
@@ -114,3 +157,4 @@ export default function RegionalInsights() {
     </div>
   );
 }
+
