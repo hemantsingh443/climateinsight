@@ -1,10 +1,7 @@
-
-// components/ClimateMap.tsx
 import React, { useEffect, useState } from 'react';
 import dynamic from 'next/dynamic';
 import 'leaflet/dist/leaflet.css';
 import { LatLngExpression } from 'leaflet';
-import L from 'leaflet'; // Use ES module import for Leaflet
 
 // Dynamically import MapContainer and other react-leaflet components
 const DynamicMapContainer = dynamic(
@@ -14,6 +11,17 @@ const DynamicMapContainer = dynamic(
 const TileLayer = dynamic(() => import('react-leaflet').then((mod) => mod.TileLayer), { ssr: false });
 const Marker = dynamic(() => import('react-leaflet').then((mod) => mod.Marker), { ssr: false });
 const Popup = dynamic(() => import('react-leaflet').then((mod) => mod.Popup), { ssr: false });
+
+// Define marker icons (this should only run on the client-side)
+const initializeLeaflet = async () => {
+  const L = await import('leaflet'); // Use dynamic import
+  delete L.Icon.Default.prototype._getIconUrl;
+  L.Icon.Default.mergeOptions({
+    iconRetinaUrl: '/leaflet/images/marker-icon-2x.png', // Update paths for your public directory
+    iconUrl: '/leaflet/images/marker-icon.png', // Update paths for your public directory
+    shadowUrl: '/leaflet/images/marker-shadow.png', // Update paths for your public directory
+  });
+};
 
 interface RegionData {
   id: number;
@@ -41,15 +49,13 @@ const ClimateMap: React.FC<ClimateMapProps> = ({ darkMode }) => {
   const [isClient, setIsClient] = useState(false);
 
   useEffect(() => {
-    // This code runs only on the client side
-    // Configure Leaflet icons
-    L.Icon.Default.mergeOptions({
-      iconRetinaUrl: '/leaflet/images/marker-icon-2x.png', // Update paths for your public directory
-      iconUrl: '/leaflet/images/marker-icon.png', // Update paths for your public directory
-      shadowUrl: '/leaflet/images/marker-shadow.png', // Update paths for your public directory
-    });
+    // Set flag for client-side rendering
+    setIsClient(true);
 
-    setIsClient(true); // Set flag for client-side rendering
+    // Initialize Leaflet only in the client
+    if (typeof window !== 'undefined') {
+      initializeLeaflet();
+    }
   }, []);
 
   const mapStyle = darkMode
