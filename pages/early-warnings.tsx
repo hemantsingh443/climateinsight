@@ -1,21 +1,24 @@
-
-import Head from 'next/head';
 import { useState } from 'react';
-import { AlertTriangle, ThermometerSun, Droplets, Wind, MapPin, Sun, Moon } from 'lucide-react'; // Import Sun and Moon icons
-import Link from 'next/link'; // Import Link for navigation
+import Head from 'next/head';
+import Link from 'next/link';
+import { AlertTriangle, ThermometerSun, Droplets, Wind, MapPin, Sun, Moon } from 'lucide-react';
+import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
+import { Button } from "@/components/ui/button";
+import { Alert, AlertDescription, AlertTitle } from "@/components/ui/alert";
+import { Badge } from "@/components/ui/badge";
+import { ScrollArea } from "@/components/ui/scroll-area";
+import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
+import { motion } from 'framer-motion';
 
-// Define warning levels with associated CSS classes
 const warningLevels = {
-  low: 'bg-green-100 text-black',
-  moderate: 'bg-yellow-100 text-black',
-  high: 'bg-orange-100 text-black',
-  severe: 'bg-red-100 text-black',
-} as const; // Use 'as const' to infer literal types
+  low: { light: 'bg-green-100 text-green-900', dark: 'bg-green-900/20 text-green-300' },
+  moderate: { light: 'bg-yellow-100 text-yellow-900', dark: 'bg-yellow-900/20 text-yellow-300' },
+  high: { light: 'bg-orange-100 text-orange-900', dark: 'bg-orange-900/20 text-orange-300' },
+  severe: { light: 'bg-red-100 text-red-900', dark: 'bg-red-900/20 text-red-300' },
+} as const;
 
-// Define a type for the warning levels
 type WarningLevel = keyof typeof warningLevels;
 
-// Define a type for a warning object
 interface Warning {
   id: number;
   type: string;
@@ -24,7 +27,6 @@ interface Warning {
   description: string;
 }
 
-// Sample warnings data
 const warnings: Warning[] = [
   { id: 1, type: 'Heatwave', level: 'high', region: 'Southwest', description: 'Temperatures expected to exceed 40°C for the next 5 days.' },
   { id: 2, type: 'Drought', level: 'moderate', region: 'Midwest', description: 'Rainfall 50% below average for the past 3 months.' },
@@ -34,142 +36,239 @@ const warnings: Warning[] = [
 
 export default function EarlyWarnings() {
   const [selectedWarning, setSelectedWarning] = useState<number | null>(null);
-  const [darkMode, setDarkMode] = useState(false); // Local darkMode state
+  const [darkMode, setDarkMode] = useState(false);
 
   return (
-    <div className={`${darkMode ? 'bg-gray-900 text-white' : 'bg-gray-100 text-black'} min-h-screen`}>
+    <div className={`min-h-screen transition-colors duration-300 ${darkMode ? 'bg-gray-900 text-white' : 'bg-gray-50 text-gray-900'}`}>
       <Head>
         <title>Early Warnings - ClimateInsight</title>
         <link rel="icon" href="/favicon.ico" />
       </Head>
 
       <main className="container mx-auto px-4 py-8">
-        {/* Button to navigate back to the homepage */}
-        <Link href="/" className="mb-4 inline-block px-4 py-2 bg-blue-500 text-white rounded hover:bg-blue-600">
-          Back to Homepage
-        </Link>
-
         <div className="flex justify-between items-center mb-8">
-          <h1 className="text-3xl font-bold">Early Warnings</h1>
-
-          {/* Dark mode toggle button */}
-          <button
-            onClick={() => setDarkMode(!darkMode)}
-            className={`p-2 rounded-full ${darkMode ? 'bg-yellow-400 text-gray-900' : 'bg-gray-200 text-gray-600'}`}
+          <motion.div 
+            initial={{ x: -20, opacity: 0 }}
+            animate={{ x: 0, opacity: 1 }}
+            className="space-y-2"
           >
-            {darkMode ? <Sun size={20} /> : <Moon size={20} />}
-          </button>
+            <Link href="/">
+              <Button 
+                variant="outline" 
+                className={`mb-4 ${darkMode ? 'border-gray-700 hover:bg-gray-800 text-white' : ''}`}
+              >
+                Back to Homepage
+              </Button>
+            </Link>
+            <h1 className="text-4xl font-bold tracking-tight">Early Warnings</h1>
+            <p className={`${darkMode ? 'text-gray-400' : 'text-gray-600'}`}>
+              Monitor and track climate-related alerts and predictions
+            </p>
+          </motion.div>
+          
+          <Button
+            variant="outline"
+            size="icon"
+            onClick={() => setDarkMode(!darkMode)}
+            className={`rounded-full ${darkMode ? 'border-gray-700 hover:bg-gray-800' : ''}`}
+          >
+            {darkMode ? <Sun className="h-5 w-5" /> : <Moon className="h-5 w-5" />}
+          </Button>
         </div>
 
-        <div className="grid grid-cols-1 md:grid-cols-3 gap-8 mb-8">
-          <div className={`md:col-span-2 ${darkMode ? 'bg-gray-800' : 'bg-white'} p-6 rounded-lg shadow-lg`}>
-            <h2 className="text-xl font-semibold mb-4">Active Warnings</h2>
-            <div className="space-y-4">
-              {warnings.map(warning => (
-                <div
-                  key={warning.id}
-                  className={`p-4 rounded-lg cursor-pointer ${warningLevels[warning.level]} ${selectedWarning === warning.id ? 'ring-2 ring-blue-500' : ''}`}
-                  onClick={() => setSelectedWarning(warning.id)}
-                >
-                  <div className="flex items-center justify-between mb-2">
-                    <h3 className="font-semibold">{warning.type}</h3>
-                    <span className="px-2 py-1 text-sm rounded-full bg-white text-black">{warning.region}</span>
-                  </div>
-                  <p className="text-sm">{warning.description}</p>
+        <div className="grid grid-cols-1 md:grid-cols-3 gap-6 mb-6">
+          <Card className={`md:col-span-2 ${darkMode ? 'bg-gray-800 border-gray-700' : ''}`}>
+            <CardHeader>
+              <CardTitle className={darkMode ? 'text-white' : ''}>Active Warnings</CardTitle>
+              <CardDescription className={darkMode ? 'text-gray-400' : ''}>
+                Current climate alerts and their severity levels
+              </CardDescription>
+            </CardHeader>
+            <CardContent>
+              <ScrollArea className="h-[400px] pr-4">
+                <div className="space-y-4">
+                  {warnings.map(warning => (
+                    <motion.div
+                      key={warning.id}
+                      initial={{ y: 20, opacity: 0 }}
+                      animate={{ y: 0, opacity: 1 }}
+                      transition={{ delay: warning.id * 0.1 }}
+                    >
+                      <Alert
+                        className={`cursor-pointer transition-colors ${
+                          selectedWarning === warning.id ? 'ring-2 ring-blue-500' : ''
+                        } ${darkMode ? warningLevels[warning.level].dark : warningLevels[warning.level].light}`}
+                        onClick={() => setSelectedWarning(warning.id)}
+                      >
+                        <AlertTriangle className="h-4 w-4" />
+                        <AlertTitle className="flex items-center justify-between">
+                          {warning.type}
+                          <Badge 
+                            variant="outline" 
+                            className={darkMode ? 'border-gray-700' : ''}
+                          >
+                            {warning.region}
+                          </Badge>
+                        </AlertTitle>
+                        <AlertDescription>{warning.description}</AlertDescription>
+                      </Alert>
+                    </motion.div>
+                  ))}
                 </div>
-              ))}
-            </div>
-          </div>
+              </ScrollArea>
+            </CardContent>
+          </Card>
 
-          <div className={`${darkMode ? 'bg-gray-800' : 'bg-white'} p-6 rounded-lg shadow-lg`}>
-            <h2 className="text-xl font-semibold mb-4">Warning Levels</h2>
-            <ul className="space-y-2">
-              {Object.entries(warningLevels).map(([level, className]) => (
-                <li key={level} className={`px-4 py-2 rounded-lg ${className}`}>
-                  {level.charAt(0).toUpperCase() + level.slice(1)}
-                </li>
-              ))}
-            </ul>
-          </div>
+          <Card className={darkMode ? 'bg-gray-800 border-gray-700' : ''}>
+            <CardHeader>
+              <CardTitle className={darkMode ? 'text-white' : ''}>Warning Levels</CardTitle>
+              <CardDescription className={darkMode ? 'text-gray-400' : ''}>
+                Understanding severity classifications
+              </CardDescription>
+            </CardHeader>
+            <CardContent>
+              <div className="space-y-2">
+                {Object.entries(warningLevels).map(([level]) => (
+                  <Alert 
+                    key={level} 
+                    className={darkMode ? warningLevels[level as WarningLevel].dark : warningLevels[level as WarningLevel].light}
+                  >
+                    <AlertTitle>{level.charAt(0).toUpperCase() + level.slice(1)}</AlertTitle>
+                  </Alert>
+                ))}
+              </div>
+            </CardContent>
+          </Card>
         </div>
 
-        <div className="grid grid-cols-1 md:grid-cols-2 gap-8 mb-8">
-          <div className={`${darkMode ? 'bg-gray-800' : 'bg-white'} p-6 rounded-lg shadow-lg`}>
-            <h2 className="text-xl font-semibold mb-4">Recent Trends</h2>
-            <ul className="space-y-4">
-              <li className="flex items-center">
-                <ThermometerSun className="mr-2" size={20} />
-                <span>Average temperature increased by 1.2°C in the past decade</span>
-              </li>
-              <li className="flex items-center">
-                <Droplets className="mr-2" size={20} />
-                <span>20% increase in extreme precipitation events since 2000</span>
-              </li>
-              <li className="flex items-center">
-                <Wind className="mr-2" size={20} />
-                <span>Tropical cyclone intensity has increased by 5% globally</span>
-              </li>
-            </ul>
-          </div>
+        <Tabs defaultValue="trends" className="mb-6">
+          <TabsList className={`grid w-full grid-cols-2 ${darkMode ? 'bg-gray-800' : ''}`}>
+            <TabsTrigger 
+              value="trends"
+              className={darkMode ? 'data-[state=active]:bg-gray-700' : ''}
+            >
+              Recent Trends
+            </TabsTrigger>
+            <TabsTrigger 
+              value="predictions"
+              className={darkMode ? 'data-[state=active]:bg-gray-700' : ''}
+            >
+              AI Predictions
+            </TabsTrigger>
+          </TabsList>
+          
+          <TabsContent value="trends">
+            <Card className={darkMode ? 'bg-gray-800 border-gray-700' : ''}>
+              <CardHeader>
+                <CardTitle className={darkMode ? 'text-white' : ''}>Climate Trends</CardTitle>
+                <CardDescription className={darkMode ? 'text-gray-400' : ''}>
+                  Historical climate data and patterns
+                </CardDescription>
+              </CardHeader>
+              <CardContent>
+                <div className="space-y-4">
+                  <div className={`flex items-center space-x-2 ${darkMode ? 'text-gray-300' : ''}`}>
+                    <ThermometerSun className="h-5 w-5 text-orange-500" />
+                    <span>Average temperature increased by 1.2°C in the past decade</span>
+                  </div>
+                  <div className={`flex items-center space-x-2 ${darkMode ? 'text-gray-300' : ''}`}>
+                    <Droplets className="h-5 w-5 text-blue-500" />
+                    <span>20% increase in extreme precipitation events since 2000</span>
+                  </div>
+                  <div className={`flex items-center space-x-2 ${darkMode ? 'text-gray-300' : ''}`}>
+                    <Wind className="h-5 w-5 text-gray-500" />
+                    <span>Tropical cyclone intensity has increased by 5% globally</span>
+                  </div>
+                </div>
+              </CardContent>
+            </Card>
+          </TabsContent>
+          
+          <TabsContent value="predictions">
+            <Card className={darkMode ? 'bg-gray-800 border-gray-700' : ''}>
+              <CardHeader>
+                <CardTitle className={darkMode ? 'text-white' : ''}>AI-Powered Predictions</CardTitle>
+                <CardDescription className={darkMode ? 'text-gray-400' : ''}>
+                  Future climate risk assessments
+                </CardDescription>
+              </CardHeader>
+              <CardContent>
+                <div className="space-y-4">
+                  {[
+                    '70% chance of severe drought in the Southwest within the next 5 years',
+                    'Projected 30% increase in category 4-5 hurricanes by 2050',
+                    'Risk of wildfires in Western regions expected to double by 2040'
+                  ].map((prediction, index) => (
+                    <Alert 
+                      key={index}
+                      className={darkMode ? 'bg-gray-700 border-gray-600' : ''}
+                    >
+                      <AlertTriangle className="h-4 w-4" />
+                      <AlertDescription className={darkMode ? 'text-gray-300' : ''}>
+                        {prediction}
+                      </AlertDescription>
+                    </Alert>
+                  ))}
+                </div>
+              </CardContent>
+            </Card>
+          </TabsContent>
+        </Tabs>
 
-          <div className={`${darkMode ? 'bg-gray-800' : 'bg-white'} p-6 rounded-lg shadow-lg`}>
-            <h2 className="text-xl font-semibold mb-4">AI-Powered Predictions</h2>
-            <ul className="space-y-4">
-              <li className="flex items-center">
-                <AlertTriangle className="mr-2" size={20} />
-                <span>70% chance of severe drought in the Southwest within the next 5 years</span>
-              </li>
-              <li className="flex items-center">
-                <AlertTriangle className="mr-2" size={20} />
-                <span>Projected 30% increase in category 4-5 hurricanes by 2050</span>
-              </li>
-              <li className="flex items-center">
-                <AlertTriangle className="mr-2" size={20} />
-                <span>Risk of wildfires in Western regions expected to double by 2040</span>
-              </li>
-            </ul>
-          </div>
-        </div>
+        <Card className={`mb-6 ${darkMode ? 'bg-gray-800 border-gray-700' : ''}`}>
+          <CardHeader>
+            <CardTitle className={darkMode ? 'text-white' : ''}>
+              Preparedness Recommendations
+            </CardTitle>
+            <CardDescription className={darkMode ? 'text-gray-400' : ''}>
+              Guidelines for individuals and communities
+            </CardDescription>
+          </CardHeader>
+          <CardContent>
+            <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+              <div className="space-y-4">
+                <h3 className={`font-semibold ${darkMode ? 'text-white' : ''}`}>
+                  For Individuals:
+                </h3>
+                <ul className={`space-y-2 list-disc pl-5 ${darkMode ? 'text-gray-300' : ''}`}>
+                  <li>Create an emergency kit with essential supplies</li>
+                  <li>Stay informed about local weather conditions and warnings</li>
+                  <li>Develop and practice a family emergency plan</li>
+                  <li>Consider flood and storm-resistant home improvements</li>
+                </ul>
+              </div>
+              <div className="space-y-4">
+                <h3 className={`font-semibold ${darkMode ? 'text-white' : ''}`}>
+                  For Communities:
+                </h3>
+                <ul className={`space-y-2 list-disc pl-5 ${darkMode ? 'text-gray-300' : ''}`}>
+                  <li>Implement early warning systems and communication networks</li>
+                  <li>Develop and maintain evacuation routes and shelters</li>
+                  <li>Invest in climate-resilient infrastructure</li>
+                  <li>Conduct regular emergency response drills</li>
+                </ul>
+              </div>
+            </div>
+          </CardContent>
+        </Card>
 
-        <div className={`${darkMode ? 'bg-gray-800' : 'bg-white'} p-6 rounded-lg shadow-lg`}>
-          <h2 className="text-xl font-semibold mb-4">Preparedness Recommendations</h2>
-          <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
-            <div>
-              <h3 className="font-semibold mb-2">For Individuals:</h3>
-              <ul className="list-disc pl-5 space-y-2">
-                <li>Create an emergency kit with essential supplies</li>
-                <li>Stay informed about local weather conditions and warnings</li>
-                <li>Develop and practice a family emergency plan</li>
-                <li>Consider flood and storm-resistant home improvements</li>
-              </ul>
+        <Card className={darkMode ? 'bg-gray-800 border-gray-700' : ''}>
+          <CardHeader>
+            <CardTitle className={darkMode ? 'text-white' : ''}>Regional Alert Map</CardTitle>
+            <CardDescription className={darkMode ? 'text-gray-400' : ''}>
+              Geographic distribution of current alerts
+            </CardDescription>
+          </CardHeader>
+          <CardContent>
+            <div className={`aspect-w-16 aspect-h-9 ${darkMode ? 'bg-gray-700' : 'bg-gray-100'} rounded-lg flex items-center justify-center`}>
+              <div className={`flex flex-col items-center ${darkMode ? 'text-gray-400' : 'text-gray-500'}`}>
+                <MapPin size={48} />
+                <span className="mt-2">Interactive map placeholder</span>
+              </div>
             </div>
-            <div>
-              <h3 className="font-semibold mb-2">For Communities:</h3>
-              <ul className="list-disc pl-5 space-y-2">
-                <li>Implement early warning systems and communication networks</li>
-                <li>Develop and maintain evacuation routes and shelters</li>
-                <li>Invest in climate-resilient infrastructure</li>
-                <li>Conduct regular emergency response drills</li>
-              </ul>
-            </div>
-          </div>
-        </div>
-
-        <div className={`${darkMode ? 'bg-gray-800' : 'bg-white'} mt-8 p-6 rounded-lg shadow-lg`}>
-          <h2 className="text-xl font-semibold mb-4">Regional Alert Map</h2>
-          <div className="aspect-w-16 aspect-h-9 bg-gray-200 rounded-lg">
-            {/* Placeholder for an interactive map */}
-            <div className="flex items-center justify-center h-full">
-              <MapPin size={48} className="text-gray-400" />
-              <span className="ml-2 text-gray-500">Interactive map placeholder</span>
-            </div>
-          </div>
-          <p className="mt-4 text-sm">
-            This interactive map would show the locations and severity of current climate-related alerts and warnings across different regions.
-          </p>
-        </div>
+          </CardContent>
+        </Card>
       </main>
     </div>
   );
 }
-
