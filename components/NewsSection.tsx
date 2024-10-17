@@ -25,17 +25,22 @@ export default function NewsSection({ darkMode }: NewsSectionProps) {
   const [currentIndex, setCurrentIndex] = useState(0);
 
   useEffect(() => {
+    const apiKey = process.env.NEXT_PUBLIC_NEWS_API_KEY; // Make sure to use NEXT_PUBLIC_ prefix
+
+    if (!apiKey) {
+      console.error("News API key not found. Check your Vercel environment variables.");
+      setError("News API key missing.");
+      setIsLoading(false);
+      return; // Stop the effect if the key is missing
+    }
+
     const fetchNews = async () => {
       try {
         const response = await fetch(
-          'https://newsapi.org/v2/everything?' +
-          'q=climate+change&' +
-          'language=en&' +
-          'sortBy=publishedAt&' +
-          'pageSize=9',
+          `https://newsapi.org/v2/everything?q=climate+change&language=en&sortBy=publishedAt&pageSize=9`,
           {
             headers: {
-              'Authorization': 'Bearer c28b54fbca1e4410ae6a5b00e620c12b'
+              'Authorization': `Bearer ${apiKey}`
             }
           }
         );
