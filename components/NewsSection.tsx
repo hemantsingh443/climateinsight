@@ -1,5 +1,4 @@
-// components/NewsSection.tsx
-import { useState, useEffect } from 'react';
+import React, { useState, useEffect } from 'react';
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import { motion, AnimatePresence } from 'framer-motion';
 
@@ -25,35 +24,35 @@ export default function NewsSection({ darkMode }: NewsSectionProps) {
   const [currentIndex, setCurrentIndex] = useState(0);
 
   useEffect(() => {
-    const apiKey = process.env.NEXT_PUBLIC_NEWS_API_KEY; // Make sure to use NEXT_PUBLIC_ prefix
-
-    if (!apiKey) {
-      console.error("News API key not found. Check your Vercel environment variables.");
-      setError("News API key missing.");
-      setIsLoading(false);
-      return; // Stop the effect if the key is missing
-    }
-
     const fetchNews = async () => {
-      try {
-        const response = await fetch(
-          `https://newsapi.org/v2/everything?q=climate+change&language=en&sortBy=publishedAt&pageSize=9`,
-          {
-            headers: {
-              'Authorization': `Bearer ${apiKey}`
-            }
-          }
-        );
+      const proxyUrl = "https://cors-anywhere.herokuapp.com/";
+      const qInTitle = "climate change";
+      const from = new Date(Date.now() - 30 * 24 * 60 * 60 * 1000).toISOString().split('T')[0]; // 30 days ago
+      const apiKey = process.env.NEXT_PUBLIC_NEWS_API_KEY;
 
-        if (!response.ok) {
-          throw new Error('Failed to fetch news');
-        }
-
-        const data = await response.json();
-        setArticles(data.articles);
+      if (!apiKey) {
+        console.error("News API key not found. Check your Vercel environment variables.");
+        setError("News API key missing.");
         setIsLoading(false);
-      } catch (err) {
-        setError(err instanceof Error ? err.message : 'An error occurred');
+        return;
+      }
+
+      const url = `${proxyUrl}https://newsapi.org/v2/everything?qInTitle=${qInTitle}&from=${from}&language=en&sortBy=publishedAt&pageSize=9&apiKey=${apiKey}`;
+      const request = new Request(url);
+
+      try {
+        const response = await fetch(request);
+        if (!response.ok) {
+          const errorBody = await response.text();
+          console.error('API Error:', response.status, errorBody);
+          throw new Error(`API error: ${response.status} ${errorBody}`);
+        }
+        const news = await response.json();
+        setArticles(news.articles);
+        setIsLoading(false);
+      } catch (error) {
+        console.error('Fetch error:', error);
+        setError(error instanceof Error ? error.message : 'An error occurred');
         setIsLoading(false);
       }
     };
