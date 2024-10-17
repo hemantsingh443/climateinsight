@@ -426,7 +426,7 @@ const Home = () => {
           <AlertDescription className={darkMode ? 'text-gray-300' : ''}>
             Climate change affects us all. Sign up for personalized alerts
             and contribute to a sustainable future.
-            <Button className="mt-4" variant="outline">
+                  <Button variant="outline" onClick={() => setShowSignUpModal(true)}>
               Sign Up for Alerts
             </Button>
           </AlertDescription>
