@@ -9,7 +9,11 @@ const config: Config = {
   ],
   theme: {
   	extend: {
-  		colors: {
+        fontFamily: {
+        serif: ['Playfair Display', 'serif'],
+        sans: ['Inter', 'sans-serif'], 
+  	   },	
+      colors: {
   			background: 'hsl(var(--background))',
   			foreground: 'hsl(var(--foreground))',
   			card: {
