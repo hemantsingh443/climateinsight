@@ -25,14 +25,11 @@ export default function NewsSection({ darkMode }: NewsSectionProps) {
   const [error, setError] = useState<string | null>(null);
   const [currentIndex, setCurrentIndex] = useState(0);
 
-
-
-
- useEffect(() => {
-    const apiKey = process.env.NEXT_PUBLIC_NEWS_API_KEY;
+  useEffect(() => {
+    const apiKey = process.env.NEXT_PUBLIC_NEWS_API_KEY; // Make sure to use NEXT_PUBLIC_ prefix
 
     if (!apiKey) {
-      console.error("News API key not found. Check your .env file.");
+      console.error("News API key not found. Check your Vercel environment variables.");
       setError("News API key missing.");
       setIsLoading(false);
       return; // Stop the effect if the key is missing
@@ -64,7 +61,6 @@ export default function NewsSection({ darkMode }: NewsSectionProps) {
 
     fetchNews();
   }, []);
-
   useEffect(() => {
     if (articles.length === 0) return;
 
