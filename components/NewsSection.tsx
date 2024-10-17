@@ -180,5 +180,5 @@ export default function NewsSection({ darkMode }: NewsSectionProps) {
         ))}
       </div>
     </section>
-  ); 
-}
+  );
+} 
