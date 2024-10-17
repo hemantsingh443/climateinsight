@@ -142,9 +142,7 @@ const Home = () => {
         />
       </Head>
 
-
-       {/* Navigation */}
-      <NavigationMenu className={`p-4 ${darkMode ? 'bg-gray-800' : 'bg-white'}`}>
+  <NavigationMenu className={`p-4 ${darkMode ? 'bg-gray-800' : 'bg-white'}`}>
         <NavigationMenuList>
           <NavigationMenuItem>
             <Link href="/" className={`text-2xl font-bold ${darkMode ? 'text-white' : 'text-gray-900'}`}>
@@ -167,7 +165,6 @@ const Home = () => {
               </div>
             </NavigationMenuContent>
           </NavigationMenuItem>
-
           <div className="flex items-center gap-4">
             {user ? (
               <>

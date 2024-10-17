@@ -7,17 +7,15 @@ import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 
 interface User {
- id: number; 
+  id: number; // Change this to 'number'
   username: string; 
   displayName: string;
-
-  // Add other properties as needed
 }
 
 interface LoginModalProps {
   onClose: () => void;
   darkMode: boolean;
-  onLoginSuccess?: (user: User) => void; // Specify the type for user
+  onLoginSuccess?: (user: User) => void;
 }
 
 const LoginModal: React.FC<LoginModalProps> = ({ onClose, darkMode, onLoginSuccess }) => {
@@ -67,7 +65,7 @@ const LoginModal: React.FC<LoginModalProps> = ({ onClose, darkMode, onLoginSucce
       }
     } catch (err) {
       setError('An error occurred. Please try again.');
-      console.error(err); // Log the error for debugging
+      console.error(err); 
     } finally {
       setLoading(false);
     }
