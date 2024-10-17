@@ -49,8 +49,16 @@ import {
 import ClimateMap from '../components/ClimateMap';
 import NewsSection from '../components/NewsSection';
 import LoginModal from '../components/LoginModal';
+import SignUpModal from '../components/SignUpModal'; 
+
+interface User {
+  id: number;
+  username: string;
+  displayName: string;
+}
 
 const Home = () => {
+   const [user, setUser] = useState<User | null>(null);
   const [darkMode, setDarkMode] = useState(false);
   const [showLoginModal, setShowLoginModal] = useState(false);
   const [currentWeather, setCurrentWeather] = useState({
@@ -59,7 +67,7 @@ const Home = () => {
     windSpeed: 0,
   });
   const [activeHeroSection, setActiveHeroSection] = useState(0);
-
+  const [showSignUpModal, setShowSignUpModal] = useState(false); 
   useEffect(() => {
     setCurrentWeather({ temp: 22, humidity: 60, windSpeed: 5 });
 
@@ -69,6 +77,31 @@ const Home = () => {
 
     return () => clearInterval(interval);
   }, []);
+  
+
+ 
+ // Add effect to check if user is logged in on page load
+  useEffect(() => {
+    const storedUser = localStorage.getItem('user');
+    if (storedUser) {
+      setUser(JSON.parse(storedUser));
+    }
+  }, []);
+  
+   // Add logout handler
+  const handleLogout = () => {
+    setUser(null);
+    localStorage.removeItem('user');
+  }; 
+
+
+  // Add login success handler
+  const handleLoginSuccess = (userData: User) => {
+    setUser(userData);
+    localStorage.setItem('user', JSON.stringify(userData));
+    setShowLoginModal(false);
+  };
+
 
   const climateData = [
     { year: 2010, temperature: 14.5, co2: 389 },
@@ -109,7 +142,8 @@ const Home = () => {
         />
       </Head>
 
-      {/* Navigation */}
+
+       {/* Navigation */}
       <NavigationMenu className={`p-4 ${darkMode ? 'bg-gray-800' : 'bg-white'}`}>
         <NavigationMenuList>
           <NavigationMenuItem>
@@ -133,12 +167,27 @@ const Home = () => {
               </div>
             </NavigationMenuContent>
           </NavigationMenuItem>
-          <NavigationMenuItem>
-            <Button variant="outline" onClick={() => setShowLoginModal(true)}>
-              Login
-            </Button>
-          </NavigationMenuItem>
-          <NavigationMenuItem>
+
+          <div className="flex items-center gap-4">
+            {user ? (
+              <>
+                <div className="flex items-center gap-2">
+                  <span className="text-sm">Welcome, {user.displayName}!</span>
+                  <Button variant="outline" onClick={handleLogout}>
+                    Logout
+                  </Button>
+                </div>
+              </>
+            ) : (
+              <>
+                <Button variant="outline" onClick={() => setShowSignUpModal(true)}>
+                  Sign Up
+                </Button>
+                <Button variant="outline" onClick={() => setShowLoginModal(true)}>
+                  Login
+                </Button>
+              </>
+            )}
             <Button
               variant="ghost"
               size="icon"
@@ -147,7 +196,7 @@ const Home = () => {
             >
               {darkMode ? <Sun className="h-5 w-5" /> : <Moon className="h-5 w-5" />}
             </Button>
-          </NavigationMenuItem>
+          </div>
         </NavigationMenuList>
       </NavigationMenu>
 
@@ -430,21 +479,40 @@ const Home = () => {
           </div>
         </div>
       </footer>
+{/* Update your Login Modal */}
+      {showLoginModal && (
+        <Sheet open={showLoginModal} onOpenChange={setShowLoginModal}>
+          <SheetContent>
+            <SheetHeader>
+              <SheetTitle>Login to ClimateInsight</SheetTitle>
+              <SheetDescription>
+                Access your personalized climate monitoring dashboard
+              </SheetDescription>
+            </SheetHeader>
+            <LoginModal 
+              onClose={() => setShowLoginModal(false)} 
+              darkMode={darkMode}
+              onLoginSuccess={handleLoginSuccess}
+            />
+          </SheetContent>
+        </Sheet>
+      )}
 
-      {/* Login Modal */}
-      <Sheet open={showLoginModal} onOpenChange={setShowLoginModal}>
+      {/* Sign Up Modal */}
+      <Sheet open={showSignUpModal} onOpenChange={setShowSignUpModal}>
         <SheetContent className={darkMode ? 'bg-gray-800 text-white' : ''}>
           <SheetHeader>
-            <SheetTitle className={darkMode ? 'text-white' : ''}>Login to ClimateInsight</SheetTitle>
+            <SheetTitle className={darkMode ? 'text-white' : ''}>Sign Up for ClimateInsight</SheetTitle>
             <SheetDescription className={darkMode ? 'text-gray-300' : ''}>
-              Access your personalized climate monitoring dashboard
+              Create an account to access personalized climate insights
             </SheetDescription>
           </SheetHeader>
-          <LoginModal onClose={() => setShowLoginModal(false)} darkMode={darkMode} />
+          <SignUpModal onClose={() => setShowSignUpModal(false)} darkMode={darkMode} />
         </SheetContent>
       </Sheet>
     </div>
   );
 };
+
 
 export default Home;
