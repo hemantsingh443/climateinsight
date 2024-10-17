@@ -1,4 +1,6 @@
-import React, { useState, useEffect } from 'react';
+
+// components/NewsSection.tsx
+import { useState, useEffect } from 'react';
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import { motion, AnimatePresence } from 'framer-motion';
 
@@ -24,35 +26,35 @@ export default function NewsSection({ darkMode }: NewsSectionProps) {
   const [currentIndex, setCurrentIndex] = useState(0);
 
   useEffect(() => {
+    const apiKey = process.env.NEXT_PUBLIC_NEWS_API_KEY; // Make sure to use NEXTPUBLIC prefix
+
+    if (!apiKey) {
+      console.error("News API key not found. Check your Vercel environment variables.");
+      setError("News API key missing.");
+      setIsLoading(false);
+      return; // Stop the effect if the key is missing
+    }
+
     const fetchNews = async () => {
-      const proxyUrl = "https://cors-anywhere.herokuapp.com/";
-      const qInTitle = "climate change";
-      const from = new Date(Date.now() - 30 * 24 * 60 * 60 * 1000).toISOString().split('T')[0]; // 30 days ago
-      const apiKey = process.env.NEXT_PUBLIC_NEWS_API_KEY;
-
-      if (!apiKey) {
-        console.error("News API key not found. Check your Vercel environment variables.");
-        setError("News API key missing.");
-        setIsLoading(false);
-        return;
-      }
-
-      const url = `${proxyUrl}https://newsapi.org/v2/everything?qInTitle=${qInTitle}&from=${from}&language=en&sortBy=publishedAt&pageSize=9&apiKey=${apiKey}`;
-      const request = new Request(url);
-
       try {
-        const response = await fetch(request);
+        const response = await fetch(
+          https://newsapi.org/v2/everything?q=climate+change&language=en&sortBy=publishedAt&pageSize=9,
+          {
+            headers: {
+              'Authorization': Bearer ${apiKey}
+            }
+          }
+        );
+
         if (!response.ok) {
-          const errorBody = await response.text();
-          console.error('API Error:', response.status, errorBody);
-          throw new Error(`API error: ${response.status} ${errorBody}`);
+          throw new Error('Failed to fetch news');
         }
-        const news = await response.json();
-        setArticles(news.articles);
+
+        const data = await response.json();
+        setArticles(data.articles);
         setIsLoading(false);
-      } catch (error) {
-        console.error('Fetch error:', error);
-        setError(error instanceof Error ? error.message : 'An error occurred');
+      } catch (err) {
+        setError(err instanceof Error ? err.message : 'An error occurred');
         setIsLoading(false);
       }
     };
@@ -62,7 +64,7 @@ export default function NewsSection({ darkMode }: NewsSectionProps) {
 
   useEffect(() => {
     if (articles.length === 0) return;
-    
+
     const interval = setInterval(() => {
       setCurrentIndex((prevIndex) => 
         prevIndex + 3 >= articles.length ? 0 : prevIndex + 3
@@ -119,9 +121,9 @@ export default function NewsSection({ darkMode }: NewsSectionProps) {
               className="flex"
             >
               <Card 
-                className={`${
+                className={${
                   darkMode ? 'bg-gray-800 text-white' : 'bg-white'
-                } h-full flex flex-col w-full hover:shadow-xl transition-shadow duration-300`}
+                } h-full flex flex-col w-full hover:shadow-xl transition-shadow duration-300}
               >
                 <div className="relative h-48 w-full overflow-hidden rounded-t-lg">
                   <img
@@ -148,7 +150,7 @@ export default function NewsSection({ darkMode }: NewsSectionProps) {
                   </p>
                   <a 
                     href={article.url}
-                    target="_blank"
+                    target="blank"
                     rel="noopener noreferrer"
                     className="inline-flex items-center text-blue-600 dark:text-blue-400 
                              hover:underline font-medium transition-colors duration-200"
@@ -165,18 +167,18 @@ export default function NewsSection({ darkMode }: NewsSectionProps) {
         </AnimatePresence>
       </div>
       <div className="flex justify-center mt-8 gap-3">
-        {Array.from({ length: Math.ceil(articles.length / 3) }).map((_, idx) => (
+        {Array.from({ length: Math.ceil(articles.length / 3) }).map((, idx) => (
           <button
             key={idx}
             onClick={() => setCurrentIndex(idx * 3)}
-            className={`w-3 h-3 rounded-full transition-colors ${
+            className={w-3 h-3 rounded-full transition-colors ${
               Math.floor(currentIndex / 3) === idx 
                 ? 'bg-blue-600' 
                 : 'bg-gray-300'
-            }`}
+            }}
           />
         ))}
       </div>
     </section>
-  );
+  ); 
 }
