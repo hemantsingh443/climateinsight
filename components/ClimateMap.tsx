@@ -1,4 +1,5 @@
 
+
 import React, { useEffect, useState } from 'react';
 import dynamic from 'next/dynamic';
 import 'leaflet/dist/leaflet.css';
@@ -87,3 +88,4 @@ const ClimateMap: React.FC<ClimateMapProps> = ({ darkMode }) => {
 };
 
 export default ClimateMap;
+
