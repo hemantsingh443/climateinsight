@@ -109,13 +109,13 @@ const SignUpModal: React.FC<SignUpModalProps> = ({ onClose, darkMode }) => {
 
       <div className="space-y-4">
         <div className="space-y-2">
-          <Label htmlFor="username">Username</Label>
+          <Label htmlFor="username">Email entry</Label>
           <Input
             id="username"
             name="username"
             value={formData.username}
             onChange={handleChange}
-            placeholder="Enter your username for login"
+            placeholder="Enter your email for login"
             disabled={loading}
           />
           <p className="text-sm text-gray-500">This will be used for logging in.</p>
